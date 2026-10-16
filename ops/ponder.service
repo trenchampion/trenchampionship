@@ -1,0 +1,21 @@
+[Unit]
+Description=TRENCHAMPIONSHIP indexer (Ponder)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=__USER__
+WorkingDirectory=__REPO__/indexer
+Environment=NODE_ENV=production
+Environment=PATH=/opt/node22/bin:/usr/local/bin:/usr/bin:/bin
+# `ponder start` is called directly: `pnpm exec` exits with ERR_PNPM_IGNORED_BUILDS on this workspace.
+ExecStart=__REPO__/indexer/node_modules/.bin/ponder start --schema __SCHEMA__ --hostname 127.0.0.1 --port 42069
+Restart=always
+RestartSec=10
+# PGlite runs inside the Node process and its working set grows under load; past the cap systemd kills and
+# restarts the service, the nginx cache serves stale answers meanwhile (docs/DEPLOY.md section 8).
+MemoryHigh=__MEM_HIGH__
+MemoryMax=__MEM_MAX__
+
+[Install]
+WantedBy=multi-user.target

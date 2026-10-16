@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#f5f6fa" />
+<title>LaunchPool · TRENCHAMPIONSHIP</title>
+<style>
+  /* Same "arena" palette as the main site (web/src/app/globals.css); system fonts, no external requests. */
+  :root {
+    --bg:#f5f6fa; --panel:#ffffff; --panel-2:#f1f3f8; --line:#e4e8ef; --line-strong:#cdd4df;
+    --text:#2a3342; --text-strong:#0d1424; --muted:#5f6b7d;
+    --accent:#4a43d9; --accent-soft:rgba(74,67,217,.09); --accent-line:rgba(74,67,217,.35);
+    --good:#1a9a57; --bad:#d23f3f; --warn:#8a5a00; --warn-soft:#fff3d1; --warn-line:#f0d389;
+    --el-fire:#e4552a; --el-air:#1796b8; --el-earth:#2c9a58; --el-water:#2b7bd4; --el-shadow:#7b45c2;
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; background:var(--bg); color:var(--text); line-height:1.5;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-image: radial-gradient(900px 480px at 6% -140px, rgba(74,67,217,.11), transparent 62%), radial-gradient(760px 440px at 94% -120px, rgba(23,150,184,.11), transparent 62%);
+    background-repeat:no-repeat; min-height:100dvh; -webkit-font-smoothing:antialiased;
+  }
+  .stripe { height:3px; background:linear-gradient(90deg, var(--el-fire), var(--el-air), var(--el-earth), var(--el-water), var(--el-shadow)); }
+  header.top { background:rgba(255,255,255,.84); border-bottom:1px solid var(--line); backdrop-filter:blur(14px); }
+  header.top .in { max-width:720px; margin:0 auto; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:inline-flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.06em; font-size:15px; color:var(--text-strong); text-decoration:none; }
+  .brand svg { width:26px; height:26px; }
+  .back { font-size:14px; color:var(--muted); text-decoration:none; }
+  .back:hover { color:var(--accent); }
+  main { max-width:720px; margin:0 auto; padding:28px 16px 56px; }
+  .eyebrow { font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+  h1 { margin:6px 0 8px; font-size:clamp(28px, 5vw, 38px); line-height:1.08; letter-spacing:-.02em; color:var(--text-strong); }
+  h3 { margin:0 0 10px; font-size:17px; color:var(--text-strong); }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:18px; margin-bottom:14px; box-shadow:0 1px 2px rgba(13,20,36,.05), 0 10px 30px -14px rgba(13,20,36,.14); }
+  .muted { color:var(--muted); }
+  label { display:block; font-size:13px; font-weight:600; color:var(--text-strong); }
+  input, select { width:100%; padding:9px 11px; border-radius:8px; border:1px solid var(--line-strong); background:#fff; color:var(--text-strong); margin:5px 0 10px; font-size:15px; font-weight:400; }
+  input:focus, select:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft); }
+  button { padding:9px 15px; border-radius:8px; border:1px solid var(--line-strong); background:#fff; color:var(--text-strong); font-weight:600; font-size:14px; cursor:pointer; box-shadow:0 1px 2px rgba(13,20,36,.05); }
+  button:hover { border-color:var(--accent-line); box-shadow:0 0 0 3px var(--accent-soft); }
+  button.primary { background:linear-gradient(180deg,#5b54ec,#4a43d9); color:#fff; border-color:#3f38cc; }
+  button:disabled { opacity:.45; cursor:not-allowed; box-shadow:none; }
+  .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .err { color:var(--bad); font-size:13px; min-height:1.2em; margin:8px 0; }
+  .ok { color:var(--good); }
+  dl { display:grid; grid-template-columns:1fr auto; gap:8px 16px; font-size:14px; margin:0; }
+  dt { color:var(--muted); }
+  dd { margin:0; text-align:right; font-variant-numeric:tabular-nums; color:var(--text-strong); }
+  .tag { display:inline-block; font-size:12px; font-weight:600; padding:2px 9px; border-radius:999px; border:1px solid var(--line-strong); background:var(--panel-2); color:var(--muted); }
+  details summary { cursor:pointer; color:var(--muted); font-size:14px; }
+  code { word-break:break-all; font-size:13px; }
+  .note { font-size:13px; line-height:1.55; }
+  .note a { color:var(--accent); }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="in">
+    <a class="brand" href="../" title="TRENCHAMPIONSHIP home">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="bm-ring" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e4552a"/><stop offset="0.25" stop-color="#1796b8"/><stop offset="0.5" stop-color="#2c9a58"/><stop offset="0.75" stop-color="#2b7bd4"/><stop offset="1" stop-color="#7b45c2"/></linearGradient><linearGradient id="bm-core" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e4552a"/><stop offset="1" stop-color="#7b45c2"/></linearGradient></defs><polygon points="20,3 36.2,14.8 30,34 10,34 3.8,14.8" fill="none" stroke="url(#bm-ring)" stroke-width="2" stroke-linejoin="round"/><polygon points="20,11 29,17.5 25.5,28 14.5,28 11,17.5" fill="url(#bm-core)" opacity="0.9"/></svg>
+      <span>TRENCHAMPIONSHIP</span>
+    </a>
+    <a class="back" href="../">Back to the site</a>
+  </div>
+</header>
+<div class="stripe"></div>
+<main>
+  <div class="eyebrow">LaunchPool</div>
+  <h1>Buy and sell TRCH on the curve</h1>
+  <p class="muted">Directly from the immutable LaunchPool contract: no intermediary, no fee, no admin. This page is a single HTML file that anyone can host.</p>
+
+  <div class="panel">
+    <div class="row" style="justify-content:space-between">
+      <span>Network: <strong id="netname">—</strong> <span id="wallettag" class="tag" hidden></span></span>
+      <span id="account" class="muted"></span>
+    </div>
+    <p id="err" class="err"></p>
+    <div class="row">
+      <button id="connect" class="primary">Connect wallet</button>
+    </div>
+    <details style="margin-top:10px">
+      <summary>Advanced: choose network, pool address, RPC</summary>
+      <label>Network
+        <select id="chain">
+          <option value="8453">Base (8453)</option>
+          <option value="84532" selected>Base Sepolia testnet (84532)</option>
+          <option value="31337">Local Anvil (31337)</option>
+        </select>
+      </label>
+      <label>LaunchPool address <input id="pool" placeholder="0x…" /></label>
+      <label>RPC URL (optional) <input id="rpc" placeholder="default public RPC" /></label>
+    </details>
+  </div>
+
+  <div class="panel">
+    <h3>Pool state</h3>
+    <dl>
+      <dt>Spot price</dt><dd id="spot">—</dd>
+      <dt>Real ETH in the pool</dt><dd id="reserve">—</dd>
+      <dt>Tokens on the curve</dt><dd id="tokens">—</dd>
+      <dt>Inflow cap active</dt><dd id="cap">—</dd>
+      <dt>Room left under the cap</dt><dd id="caproom">—</dd>
+      <dt>Your balance</dt><dd id="mytl">—</dd>
+    </dl>
+  </div>
+
+  <div class="panel">
+    <h3>Buy</h3>
+    <label>ETH to spend <input id="buyEth" value="0.01" /></label>
+    <p class="muted note">You receive about <span id="buyQuote">—</span> <span class="sym">tokens</span> (1% slippage protection). During the first 30 days the pool accepts at most 1 ETH per day in total and 0.5 ETH per purchase.</p>
+    <button id="buy" class="primary" disabled>Buy</button>
+  </div>
+
+  <div class="panel">
+    <h3>Sell</h3>
+    <label>Tokens to sell <input id="sellTl" value="1000" /></label>
+    <p class="muted note">You receive about <span id="sellQuote">—</span> ETH. A sale goes through only while the real ETH in the pool covers the payout.</p>
+    <div class="row">
+      <button id="approve" disabled>1. Approve</button>
+      <button id="sell" class="primary" disabled>2. Sell</button>
+    </div>
+  </div>
+
+  <p class="muted note">Curve: constant product with a virtual reserve of 1 ETH and 900M tokens on the curve; the pool is immutable and has no owner. Built for entertainment: TRCH is the utility token of the game, it has no guaranteed value, nothing here is advice or an offer, and this interface only relays your own transactions. <a href="../disclaimer/">Disclaimer</a> · <a href="https://x.com/trenchampions" target="_blank" rel="noreferrer">Follow on X</a>.</p>
+</main>
+
+<script type="module">
+import { createPublicClient, createWalletClient, custom, http, formatEther, parseEther, formatUnits, parseUnits, getContract } from "https://esm.sh/viem@2.21.0";
+
+const poolAbi = [
+  { type: "function", name: "TL", stateMutability: "view", inputs: [], outputs: [{ type: "address" }] },
+  { type: "function", name: "spotPrice", stateMutability: "view", inputs: [], outputs: [{ type: "uint256" }] },
+  { type: "function", name: "realReserve", stateMutability: "view", inputs: [], outputs: [{ type: "uint256" }] },
+  { type: "function", name: "tokenReserve", stateMutability: "view", inputs: [], outputs: [{ type: "uint256" }] },
+  { type: "function", name: "capActive", stateMutability: "view", inputs: [], outputs: [{ type: "bool" }] },
+  { type: "function", name: "capAllowance", stateMutability: "view", inputs: [], outputs: [{ type: "uint256" }] },
+  { type: "function", name: "cappedInflow", stateMutability: "view", inputs: [], outputs: [{ type: "uint256" }] },
+  { type: "function", name: "quoteBuy", stateMutability: "view", inputs: [{ type: "uint256" }], outputs: [{ type: "uint256" }] },
+  { type: "function", name: "quoteSell", stateMutability: "view", inputs: [{ type: "uint256" }], outputs: [{ type: "uint256" }] },
+  { type: "function", name: "buy", stateMutability: "payable", inputs: [{ type: "uint256" }], outputs: [{ type: "uint256" }] },
+  { type: "function", name: "sell", stateMutability: "nonpayable", inputs: [{ type: "uint256" }, { type: "uint256" }], outputs: [{ type: "uint256" }] },
+];
+const erc20Abi = [
+  { type: "function", name: "symbol", stateMutability: "view", inputs: [], outputs: [{ type: "string" }] },
+  { type: "function", name: "balanceOf", stateMutability: "view", inputs: [{ type: "address" }], outputs: [{ type: "uint256" }] },
+  { type: "function", name: "allowance", stateMutability: "view", inputs: [{ type: "address" }, { type: "address" }], outputs: [{ type: "uint256" }] },
+  { type: "function", name: "approve", stateMutability: "nonpayable", inputs: [{ type: "address" }, { type: "uint256" }], outputs: [{ type: "bool" }] },
+];
+
+// Known deployments. The Base mainnet entry is filled in at mainnet launch.
+const NETWORKS = {
+  8453:  { name: "Base",                 rpc: "https://mainnet.base.org", pool: "" },
+  84532: { name: "Base Sepolia testnet", rpc: "https://sepolia.base.org", pool: "0x3b92362131e963eab6233111Aaed33b979fB52cB" },
+  31337: { name: "Local Anvil",          rpc: "http://127.0.0.1:8545",    pool: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512" },
+};
+const $ = (id) => document.getElementById(id);
+const fmt = (v, d = 0) => Number(formatUnits(v, 18)).toLocaleString("en-US", { maximumFractionDigits: d });
+const eth = (v, d = 6) => Number(formatEther(v)).toLocaleString("en-US", { maximumFractionDigits: d });
+let pub, wallet, account, pool, tl, chainId, symbol = "tokens", walletChain = null;
+
+const params = new URLSearchParams(location.search);
+if (params.get("chain") && NETWORKS[Number(params.get("chain"))]) $("chain").value = params.get("chain");
+if (params.get("pool")) $("pool").value = params.get("pool");
+
+function fail(e) { $("err").className = "err"; $("err").textContent = (e?.shortMessage || e?.message || String(e)).slice(0, 220); }
+function note(t, ok) { $("err").textContent = t; $("err").className = ok ? "err ok" : "err"; }
+function setSymbol(s) { symbol = s; for (const el of document.querySelectorAll(".sym")) el.textContent = s; }
+
+function currentPool() {
+  const typed = $("pool").value.trim();
+  if (/^0x[0-9a-fA-F]{40}$/.test(typed)) return typed;
+  return NETWORKS[chainId]?.pool || "";
+}
+
+async function setup() {
+  chainId = Number($("chain").value);
+  const net = NETWORKS[chainId];
+  $("netname").textContent = net ? net.name : `chain ${chainId}`;
+  pub = createPublicClient({ transport: http($("rpc").value.trim() || net?.rpc) });
+  const addr = currentPool();
+  pool = null; tl = null;
+  for (const id of ["buy", "sell", "approve"]) $(id).disabled = true;
+  if (!addr) {
+    note(chainId === 8453 ? "The LaunchPool is not deployed on Base mainnet yet. Choose the Base Sepolia testnet under Advanced." : "No LaunchPool address for this network. Paste one under Advanced.", false);
+    return;
+  }
+  pool = getContract({ address: addr, abi: poolAbi, client: pub });
+  const tlAddr = await pool.read.TL();
+  tl = getContract({ address: tlAddr, abi: erc20Abi, client: pub });
+  try { setSymbol(await tl.read.symbol()); } catch { setSymbol("tokens"); }
+  note("", true);
+  await refresh();
+}
+
+async function refresh() {
+  if (!pool) return;
+  try {
+    const [spot, reserve, tokens, cap, allow, inflow] = await Promise.all([
+      pool.read.spotPrice(), pool.read.realReserve(), pool.read.tokenReserve(), pool.read.capActive(), pool.read.capAllowance(), pool.read.cappedInflow(),
+    ]);
+    $("spot").textContent = `${Number(formatEther(spot)).toExponential(3)} ETH per ${symbol}`;
+    $("reserve").textContent = `${eth(reserve)} ETH`;
+    $("tokens").textContent = `${fmt(tokens)} ${symbol}`;
+    $("cap").textContent = cap ? "yes (first 30 days)" : "no";
+    $("caproom").textContent = cap ? `${eth(allow > inflow ? allow - inflow : 0n)} ETH` : "—";
+    $("mytl").textContent = account ? `${fmt(await tl.read.balanceOf([account]), 2)} ${symbol}` : "connect a wallet";
+    await quotes();
+  } catch (e) { fail(e); }
+}
+
+async function quotes() {
+  if (!pool) return;
+  try {
+    const eth = parseEther($("buyEth").value || "0");
+    const q = await pool.read.quoteBuy([eth]);
+    $("buyQuote").textContent = fmt(q);
+    const amt = parseUnits($("sellTl").value || "0", 18);
+    const s = await pool.read.quoteSell([amt]);
+    $("sellQuote").textContent = s === 0n ? "0 (the reserve does not cover it, or the amount is too small)" : Number(formatEther(s)).toPrecision(4);
+    const ok = !!account && (walletChain === null || walletChain === chainId);
+    $("buy").disabled = !ok || eth === 0n || q === 0n;
+    $("sell").disabled = !ok || s === 0n;
+    $("approve").disabled = !ok || amt === 0n;
+  } catch (e) { fail(e); }
+}
+
+async function syncWalletChain() {
+  if (!window.ethereum) return;
+  try {
+    walletChain = Number(await window.ethereum.request({ method: "eth_chainId" }));
+    const tag = $("wallettag");
+    tag.hidden = false;
+    if (walletChain === chainId) { tag.textContent = "wallet on this network"; }
+    else { tag.textContent = `wallet is on chain ${walletChain}: switch it to ${NETWORKS[chainId]?.name ?? chainId}`; }
+  } catch { walletChain = null; }
+}
+
+function showAccount() {
+  // one state at a time: either the button or the connected address
+  $("connect").hidden = !!account;
+  $("account").textContent = account ? `Connected: ${account.slice(0, 6)}…${account.slice(-4)}` : "";
+  $("account").className = account ? "tag ok" : "muted";
+}
+
+async function useAccounts(addresses) {
+  account = addresses && addresses.length ? addresses[0] : null;
+  showAccount();
+  if (account) { await syncWalletChain(); } else { $("wallettag").hidden = true; walletChain = null; }
+  await refresh();
+}
+
+$("connect").onclick = async () => {
+  try {
+    if (!window.ethereum) throw new Error("No wallet found in this browser. Install MetaMask or another injected wallet.");
+    wallet = createWalletClient({ transport: custom(window.ethereum) });
+    await useAccounts(await wallet.requestAddresses());
+  } catch (e) { fail(e); }
+};
+
+// already authorised in this browser: show the address without a click; follow account switches and disconnects
+if (window.ethereum) {
+  wallet = createWalletClient({ transport: custom(window.ethereum) });
+  window.ethereum.request({ method: "eth_accounts" }).then((a) => useAccounts(a)).catch(() => {});
+  if (window.ethereum.on) window.ethereum.on("accountsChanged", (a) => useAccounts(a).catch(fail));
+}
+
+$("buy").onclick = async () => {
+  try {
+    const eth = parseEther($("buyEth").value);
+    const q = await pool.read.quoteBuy([eth]);
+    note("Confirm the purchase in your wallet.", true);
+    const hash = await wallet.writeContract({ address: pool.address, abi: poolAbi, functionName: "buy", args: [(q * 99n) / 100n], value: eth, account, chain: null });
+    await pub.waitForTransactionReceipt({ hash });
+    note("Purchase confirmed.", true);
+    await refresh();
+  } catch (e) { fail(e); }
+};
+
+$("approve").onclick = async () => {
+  try {
+    const amt = parseUnits($("sellTl").value, 18);
+    note("Confirm the approval in your wallet.", true);
+    const hash = await wallet.writeContract({ address: tl.address, abi: erc20Abi, functionName: "approve", args: [pool.address, amt], account, chain: null });
+    await pub.waitForTransactionReceipt({ hash });
+    note("Approved. You can sell now.", true);
+  } catch (e) { fail(e); }
+};
+
+$("sell").onclick = async () => {
+  try {
+    const amt = parseUnits($("sellTl").value, 18);
+    const s = await pool.read.quoteSell([amt]);
+    note("Confirm the sale in your wallet.", true);
+    const hash = await wallet.writeContract({ address: pool.address, abi: poolAbi, functionName: "sell", args: [amt, (s * 99n) / 100n], account, chain: null });
+    await pub.waitForTransactionReceipt({ hash });
+    note("Sale confirmed.", true);
+    await refresh();
+  } catch (e) { fail(e); }
+};
+
+for (const id of ["chain", "pool", "rpc"]) $(id).addEventListener("change", () => setup().then(syncWalletChain).catch(fail));
+for (const id of ["buyEth", "sellTl"]) $(id).addEventListener("input", () => quotes().catch(fail));
+if (window.ethereum && window.ethereum.on) window.ethereum.on("chainChanged", () => syncWalletChain().then(quotes).catch(fail));
+setup().catch(fail);
+setInterval(() => refresh().catch(() => {}), 15000);
+</script>
+</body>
+</html>

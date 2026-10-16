@@ -1,0 +1,17 @@
+[Unit]
+Description=IPFS node (kubo)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=ipfs
+Environment=IPFS_PATH=/var/lib/ipfs
+# Go honours GOMEMLIMIT as a soft heap limit: kubo then runs at ~200 MB RSS instead of ~400 MB.
+Environment=GOMEMLIMIT=__GOMEMLIMIT__
+ExecStart=/usr/local/bin/ipfs daemon --migrate=true
+Restart=always
+RestartSec=10
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

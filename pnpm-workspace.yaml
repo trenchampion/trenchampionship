@@ -1,0 +1,12 @@
+packages:
+  - engine
+  - indexer
+  - web
+  - launch-ui
+
+onlyBuiltDependencies:
+  - bufferutil
+  - esbuild
+  - keccak
+  - utf-8-validate
+  - sharp

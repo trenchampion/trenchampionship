@@ -1,0 +1,25 @@
+{
+  "name": "@traitleague/indexer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20 <23"
+  },
+  "scripts": {
+    "dev": "ponder dev --hostname 0.0.0.0",
+    "start": "ponder start --hostname 0.0.0.0",
+    "codegen": "ponder codegen",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "hono": "^4.6.0",
+    "ponder": "^0.11.0",
+    "viem": "^2.21.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.0"
+  }
+}

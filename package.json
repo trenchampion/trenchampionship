@@ -1,0 +1,13 @@
+{
+  "name": "traitleague",
+  "private": true,
+  "packageManager": "pnpm@12",
+  "scripts": {
+    "engine:build": "pnpm --filter @traitleague/engine build",
+    "engine:test": "pnpm --filter @traitleague/engine test",
+    "indexer:dev": "pnpm --filter @traitleague/indexer dev",
+    "web:dev": "pnpm --filter @traitleague/web dev",
+    "web:build": "pnpm --filter @traitleague/web build",
+    "abis": "uv run --python 3.12 python scripts/export-abis.py"
+  }
+}

@@ -1,0 +1,14 @@
+# Caddy: TLS (Let's Encrypt) and gzip. Hostnames are substituted by setup-server.sh.
+# reverse_proxy appends the visitor's address to X-Forwarded-For; nginx's realip module reads it back.
+
+__INDEXER_HOST__ {
+    encode gzip
+    reverse_proxy 127.0.0.1:8080
+}
+
+__PREVIEW_HOST__ {
+    encode gzip
+    root * /var/www/preview
+    file_server
+    try_files {path} {path}/ {path}.html
+}

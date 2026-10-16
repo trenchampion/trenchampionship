@@ -1,0 +1,51 @@
+# Foundry
+contracts/out/
+contracts/cache/
+contracts/broadcast/**/dry-run/
+contracts/lcov.info
+contracts/coverage/
+
+# Node
+node_modules/
+.next/
+out/
+dist/
+.pnpm-store/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+sim/output/
+
+# Env & secrets
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+Thumbs.db
+
+# Local anvil artefacts
+contracts/deployments/31337.json
+contracts/broadcast/*/31337/
+
+# Web/indexer build outputs
+web/out/
+web/.next/
+web/src/deployments/
+indexer/.ponder/
+indexer/generated/
+indexer/.env.local
+*.tsbuildinfo
+
+# Private design, legal and session documents (local only, never published)
+docs/private/
+
+# Timestamped duplicates of broadcast records (run-latest.json is committed)
+contracts/broadcast/**/run-[0-9]*.json
+
+# Forge broadcast lock files
+contracts/broadcast/**/*.lock
+

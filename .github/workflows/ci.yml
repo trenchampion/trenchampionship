@@ -1,0 +1,102 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  FOUNDRY_PROFILE: ci
+
+jobs:
+  contracts:
+    name: contracts (forge)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: contracts
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+      - name: fmt
+        run: forge fmt --check
+      - name: build
+        run: forge build --sizes
+      - name: test
+        run: forge test -vvv
+      - name: coverage
+        run: forge coverage --report summary --report lcov --no-match-coverage "(script|test)"
+
+  slither:
+    name: slither
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: crytic/slither-action@v0.4.1
+        with:
+          target: contracts/
+          fail-on: medium
+          slither-args: --filter-paths "lib/"
+
+  engine:
+    name: engine (ts vectors)
+    runs-on: ubuntu-latest
+    if: ${{ hashFiles('engine/package.json') != '' }}
+    defaults:
+      run:
+        working-directory: engine
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: engine/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+
+  indexer-web:
+    name: indexer typecheck + web build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @traitleague/engine build
+      - name: indexer typecheck (needs a deployment file; anvil addresses are deterministic)
+        working-directory: indexer
+        run: |
+          mkdir -p ../contracts/deployments
+          echo '{"AmmFactory":"0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE","CharacterFactory":"0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6","CharacterPortrait":"0x5FC8d32690cc91D4c39d9d3abcBD16989F875707","ControllerNFT":"0x8A791620dd6260079BF849Dc5567aDC3F2FdC318","CreatorVesting":"0x610178dA211FEF7D417bC0e6FeD39F05609AD788","LaunchPool":"0xa513E6E4b8f2a923D98304ec87F64353C4D5C853","MatchManager":"0x9A676e781A523b5d0C0e43731313A708CB607508","PortraitArms":"0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9","PortraitBase":"0x5FbDB2315678afecb367f032d93F642f64180aa3","PortraitBody":"0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512","PortraitFace":"0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0","PortraitItems":"0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9","Rating":"0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82","RewardPool":"0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e","StakingVault":"0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0","TLToken":"0x0165878A594ca255338adfa4d48449f69242Eb8F","Tournament":"0x0B306BF915C4d645ff596e518fAf3F9669b97016","chainId":31337}' > ../contracts/deployments/31337.json
+          CHAIN_ID=31337 PONDER_RPC_URL_31337=http://127.0.0.1:8545 pnpm exec ponder codegen
+          CHAIN_ID=31337 pnpm exec tsc --noEmit
+      - name: web build
+        working-directory: web
+        run: NEXT_PUBLIC_CHAIN_ID=31337 pnpm build
+
+  sim:
+    name: sim (python)
+    runs-on: ubuntu-latest
+    if: ${{ hashFiles('sim/pyproject.toml') != '' }}
+    defaults:
+      run:
+        working-directory: sim
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv run --python 3.12 pytest -q
