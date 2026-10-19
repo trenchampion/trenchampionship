@@ -361,7 +361,35 @@ sub-second medians, roughly three times the realistic peak of a thousand open ta
 | Network | Chain id | Date | Deployer | Note |
 | --- | --- | --- | --- | --- |
 | Base Sepolia | 84532 | 2026-10-15 (redeploys 2026-10-13 and 2026-10-09; first 2026-10-05) | `0x61bAE910AdF32fFa0d27160E7dF29B217A107cb7` | founder buy 0.0005 ETH (testnet); treasury = guardian = deployer (testnet) |
-| Base | 8453 | — | — | after the public testnet |
+| Base | 8453 | 2026-10-19 | `0x74B762a3f0e953501111657804D52081b1189Dc7` | founder buy 2/7 ETH (20 % of the supply at V = 1 ETH); guardian `0x0C984c00475135D5Fd808698CD6b88b995aDf546`, treasury `0x7fa18edE169491D40CeAB81ce38575f0c3432cFc` |
+
+### Base (8453), block 52815684 (mainnet deployment of 2026-10-19)
+
+| Contract | Address | Explorer |
+| --- | --- | --- |
+| PortraitBase | `0x6cD133FE3fd12Fc42BE36e48B569ef6fCa317d98` | [Blockscout](https://base.blockscout.com/address/0x6cD133FE3fd12Fc42BE36e48B569ef6fCa317d98) |
+| PortraitBody | `0x174a555c0416Cca5cD7f83Dea89e8F4fCca613Bd` | [Blockscout](https://base.blockscout.com/address/0x174a555c0416Cca5cD7f83Dea89e8F4fCca613Bd) |
+| PortraitFace | `0x2d400cFE0611C708c063CE16846B9512dFCf2ECb` | [Blockscout](https://base.blockscout.com/address/0x2d400cFE0611C708c063CE16846B9512dFCf2ECb) |
+| PortraitItems | `0xc428C26835943A73485D7677d9Af2896d8640B2C` | [Blockscout](https://base.blockscout.com/address/0xc428C26835943A73485D7677d9Af2896d8640B2C) |
+| PortraitArms | `0x90A3cC29DE1fb55F1C112a6c9BeC7EE33b780115` | [Blockscout](https://base.blockscout.com/address/0x90A3cC29DE1fb55F1C112a6c9BeC7EE33b780115) |
+| CharacterPortrait | `0xe5301248e097B5c7CA567638B9021925d8416bC5` | [Blockscout](https://base.blockscout.com/address/0xe5301248e097B5c7CA567638B9021925d8416bC5) |
+| TLToken | `0x32602ce776A045145e94507030E0C0cA8E92BD18` | [Blockscout](https://base.blockscout.com/address/0x32602ce776A045145e94507030E0C0cA8E92BD18) |
+| LaunchPool | `0x6C58A3ac191fE0f257a9864Ac880527842519d60` | [Blockscout](https://base.blockscout.com/address/0x6C58A3ac191fE0f257a9864Ac880527842519d60) |
+| CharacterFactory | `0x458747D2a32d1f7480AcFf8F3A06D4f4d9C3624d` | [Blockscout](https://base.blockscout.com/address/0x458747D2a32d1f7480AcFf8F3A06D4f4d9C3624d) |
+| ControllerNFT | `0x7Ae59A229E6944969833EbaBa8A68566DaAf1036` | [Blockscout](https://base.blockscout.com/address/0x7Ae59A229E6944969833EbaBa8A68566DaAf1036) |
+| CreatorVesting | `0x3550c55f5494487dB2ad4B527EB455825B6C67E9` | [Blockscout](https://base.blockscout.com/address/0x3550c55f5494487dB2ad4B527EB455825B6C67E9) |
+| RewardPool | `0xC682820c5C4266A2DED2CD2f9ac089A3b118900c` | [Blockscout](https://base.blockscout.com/address/0xC682820c5C4266A2DED2CD2f9ac089A3b118900c) |
+| StakingVault | `0x8DA6efD7251038edBDfc272e37782Ed7a35841b1` | [Blockscout](https://base.blockscout.com/address/0x8DA6efD7251038edBDfc272e37782Ed7a35841b1) |
+| Rating | `0xEa224cDd8597f55546B4Cc2fCd414A6b16F8E9BB` | [Blockscout](https://base.blockscout.com/address/0xEa224cDd8597f55546B4Cc2fCd414A6b16F8E9BB) |
+| MatchManager | `0xDBb200d80E9Cd6fE886b457C1aE2EA08c49c16D4` | [Blockscout](https://base.blockscout.com/address/0xDBb200d80E9Cd6fE886b457C1aE2EA08c49c16D4) |
+| Tournament | `0x1Ec83eB5522E2F88f77Ac36D9715706449DEfaB2` | [Blockscout](https://base.blockscout.com/address/0x1Ec83eB5522E2F88f77Ac36D9715706449DEfaB2) |
+| AmmFactory | `0x5e3bf147829aAaE1b1EE585bF8e9065bE8208641` | [Blockscout](https://base.blockscout.com/address/0x5e3bf147829aAaE1b1EE585bF8e9065bE8208641) |
+
+Seventeen contracts in eighteen transactions from block 52815684, founder buy 285714285714285714 wei (2/7 ETH) executed
+in the LaunchPool constructor, `realReserve` 2/7 ETH, 100 M TRCH in the RewardPool, ~200 M TRCH on the deployer, all
+wiring read back from the chain (DEPLOY.md 6.3). Code of commit 56c46d5 (the 2026-10-16 review fixes plus the MIT
+license). Blockscout verification runs in `verify8453` on the server (Cloudflare in front of base.blockscout.com needs a
+browser user agent, so `forge --verify` fails there; the standard-JSON loop works).
 
 ### Base Sepolia (84532), block 48148395 (deployment of 2026-10-15, evening: contracts after the security review)
 

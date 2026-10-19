@@ -83,8 +83,8 @@
       <summary>Advanced: choose network, pool address, RPC</summary>
       <label>Network
         <select id="chain">
-          <option value="8453">Base (8453)</option>
-          <option value="84532" selected>Base Sepolia testnet (84532)</option>
+          <option value="8453" selected>Base (8453)</option>
+          <option value="84532">Base Sepolia testnet (84532)</option>
           <option value="31337">Local Anvil (31337)</option>
         </select>
       </label>
@@ -150,7 +150,7 @@ const erc20Abi = [
 
 // Known deployments. The Base mainnet entry is filled in at mainnet launch.
 const NETWORKS = {
-  8453:  { name: "Base",                 rpc: "https://mainnet.base.org", pool: "" },
+  8453:  { name: "Base",                 rpc: "https://mainnet.base.org", pool: "0x6C58A3ac191fE0f257a9864Ac880527842519d60" },
   84532: { name: "Base Sepolia testnet", rpc: "https://sepolia.base.org", pool: "0x3b92362131e963eab6233111Aaed33b979fB52cB" },
   31337: { name: "Local Anvil",          rpc: "http://127.0.0.1:8545",    pool: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512" },
 };
