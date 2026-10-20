@@ -10,3 +10,11 @@ onlyBuiltDependencies:
   - keccak
   - utf-8-validate
   - sharp
+
+# pnpm 12 reads allowBuilds; onlyBuiltDependencies above is kept for pnpm 10 readers
+allowBuilds:
+  bufferutil: true
+  esbuild: true
+  keccak: true
+  utf-8-validate: true
+  sharp: true

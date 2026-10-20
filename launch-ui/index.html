@@ -96,6 +96,8 @@
   <div class="panel">
     <h3>Pool state</h3>
     <dl>
+      <dt>TRCH token</dt><dd id="tokenaddr" style="word-break:break-all">—</dd>
+      <dt>Verify</dt><dd><a href="https://trenchampionship.eth.limo/token/" target="_blank" rel="noreferrer">official token page (contract, supply, how to buy)</a></dd>
       <dt>Spot price</dt><dd id="spot">—</dd>
       <dt>Real ETH in the pool</dt><dd id="reserve">—</dd>
       <dt>Tokens on the curve</dt><dd id="tokens">—</dd>
@@ -150,7 +152,7 @@ const erc20Abi = [
 
 // Known deployments. The Base mainnet entry is filled in at mainnet launch.
 const NETWORKS = {
-  8453:  { name: "Base",                 rpc: "https://mainnet.base.org", pool: "0x6C58A3ac191fE0f257a9864Ac880527842519d60" },
+  8453:  { name: "Base",                 rpc: "https://mainnet.base.org", pool: "0x6C58A3ac191fE0f257a9864Ac880527842519d60", token: "0x32602ce776A045145e94507030E0C0cA8E92BD18" },
   84532: { name: "Base Sepolia testnet", rpc: "https://sepolia.base.org", pool: "0x3b92362131e963eab6233111Aaed33b979fB52cB" },
   31337: { name: "Local Anvil",          rpc: "http://127.0.0.1:8545",    pool: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512" },
 };
@@ -188,6 +190,8 @@ async function setup() {
   pool = getContract({ address: addr, abi: poolAbi, client: pub });
   const tlAddr = await pool.read.TL();
   tl = getContract({ address: tlAddr, abi: erc20Abi, client: pub });
+  $("tokenaddr").textContent = tlAddr;
+  if (net?.token && net.token.toLowerCase() !== tlAddr.toLowerCase()) { note("Warning: this pool's token is NOT the official TRCH. Check trenchampionship.eth.limo/token/.", false); return; }
   try { setSymbol(await tl.read.symbol()); } catch { setSymbol("tokens"); }
   note("", true);
   await refresh();

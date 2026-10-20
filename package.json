@@ -1,7 +1,7 @@
 {
   "name": "traitleague",
   "private": true,
-  "packageManager": "pnpm@12",
+  "packageManager": "pnpm@12.8.1",
   "scripts": {
     "engine:build": "pnpm --filter @traitleague/engine build",
     "engine:test": "pnpm --filter @traitleague/engine test",

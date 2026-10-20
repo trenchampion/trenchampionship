@@ -58,6 +58,11 @@ export function Footer() {
               </Link>
             </li>
             <li>
+              <Link href="/token/" className="hover:text-[var(--accent)]">
+                TRCH token (official contract, how to buy)
+              </Link>
+            </li>
+            <li>
               <a href={buyUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 hover:text-[var(--accent)]">
                 Get TRCH (LaunchPool UI) <IconExternal />
               </a>
@@ -71,6 +76,9 @@ export function Footer() {
               <Link href="/transparency/" className="hover:text-[var(--accent)]">
                 Transparency
               </Link>
+            </li>
+            <li className="mono text-xs break-all">
+              TRCH: <Link href="/token/" className="hover:text-[var(--accent)]">{addresses().TLToken}</Link>
             </li>
             <li>
               <Link href="/disclaimer/" className="hover:text-[var(--accent)]">

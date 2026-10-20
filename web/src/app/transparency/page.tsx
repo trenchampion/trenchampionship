@@ -70,6 +70,17 @@ export default function TransparencyPage() {
         ]}
       />
 
+      <Callout tone="info" title="Official TRCH token and LaunchPool">
+        <span className="mono break-all">TRCH {a.TLToken}</span>
+        <br />
+        <span className="mono break-all">LaunchPool {a.LaunchPool}</span>
+        <br />
+        <Link href="/token/" className="underline">
+          Token page: what TRCH is, supply, how to buy
+        </Link>
+        . Any other address is a fake.
+      </Callout>
+
       {anyPaused && (
         <Callout tone="bad" title="Guardian pause active">
           {factoryPaused.data && "Character creation is paused. "}

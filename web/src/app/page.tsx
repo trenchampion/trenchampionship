@@ -133,11 +133,16 @@ export default function Home() {
             n={1}
             icon={<IconCoins />}
             title="Get TRCH"
-            text="TRCH is the in-game utility token. Buy it on the LaunchPool curve with ETH on Base, or receive it by winning matches. The LaunchPool has no fee and no owner."
+            text="TRCH is the in-game utility token. Buy it on the LaunchPool curve with ETH on Base, or receive it by winning matches. The LaunchPool has no fee and no owner. The official contract, supply and live numbers are on the TRCH page."
             action={
-              <a href={buyUrl} target="_blank" rel="noreferrer" className="btn btn-sm">
-                Open LaunchPool UI <IconExternal />
-              </a>
+              <div className="flex flex-wrap gap-2">
+                <Link href="/token/" className="btn btn-sm btn-primary">
+                  About TRCH <IconArrow />
+                </Link>
+                <a href={buyUrl} target="_blank" rel="noreferrer" className="btn btn-sm">
+                  Get TRCH <IconExternal />
+                </a>
+              </div>
             }
           />
           <StepCard

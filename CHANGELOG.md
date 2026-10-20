@@ -5,6 +5,16 @@ the first testnet deploy.
 
 ## [Unreleased]
 
+### Token page and CI repair (2026-10-20)
+- New page /token/: the official TRCH contract with copy and add-to-wallet buttons and explorer links, what the token is
+  for, supply and distribution (including the founder purchase from the FounderBuy event), live price, reserve,
+  circulation and burns, how the LaunchPool buys and sells, and a warning that any other address is a fake. Linked from
+  the header, the footer (with the contract address), the home page and a notice on Transparency. The LaunchPool UI
+  shows the token address, links to the page and refuses a pool whose token is not the official one.
+- CI never ran since the first push: GitHub rejects hashFiles() in a job-level if, so every run failed before starting.
+  Removed the two conditions, pinned pnpm 12.8.1 via packageManager, dropped the conflicting version inputs, and
+  added the pnpm 12 allowBuilds approvals (the frozen install errored on ignored build scripts).
+
 ### Commit-reveal works with every wallet and without the indexer (2026-10-16)
 - The Arena derived the commit salt and the encryption key only from a wallet signature, assuming the signature is
   reproducible. That holds for secp256k1 accounts (RFC 6979) but not for smart wallets with passkeys (Coinbase Smart
