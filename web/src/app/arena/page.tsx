@@ -165,6 +165,39 @@ function MatchAction({ m, me }: { m: MatchRow; me?: string }) {
   );
 }
 
+const CHAIN_STATUS = ["None", "Challenged", "Accepted", "Resolved"] as const;
+const CHAIN_OUTCOME = ["Pending", "WinA", "WinB", "Draw", "Void", "Expired", "Cancelled"] as const;
+const ZERO32 = "0x0000000000000000000000000000000000000000000000000000000000000000";
+const ZERO_ADDR = "0x0000000000000000000000000000000000000000";
+
+type ChainMatch = {
+  idB: bigint;
+  controllerB: `0x${string}`;
+  status: number;
+  outcome: number;
+  revealedA: boolean;
+  revealedB: boolean;
+  commitA: `0x${string}`;
+  commitB: `0x${string}`;
+};
+
+/** Indexer row with the fields that gate actions replaced by the live contract state. */
+function withChainState(row: MatchRow, oc: ChainMatch | undefined): MatchRow {
+  if (!oc || oc.status === 0) return row;
+  const outcome = oc.outcome === 0 ? null : (CHAIN_OUTCOME[oc.outcome] ?? row.outcome);
+  return {
+    ...row,
+    status: CHAIN_STATUS[oc.status] ?? row.status,
+    outcome: outcome as MatchRow["outcome"],
+    idB: oc.idB === 0n ? row.idB : oc.idB.toString(),
+    controllerB: oc.controllerB === ZERO_ADDR ? row.controllerB : oc.controllerB,
+    committedA: oc.commitA !== ZERO32,
+    committedB: oc.commitB !== ZERO32,
+    revealedA: oc.revealedA,
+    revealedB: oc.revealedB,
+  };
+}
+
 function charName(names: NameMap, id: string | null | undefined): string {
   if (!id) return "anyone";
   return names.get(id)?.name ?? `Character ${id}`;
@@ -391,10 +424,15 @@ function ChallengeForm({ mine, mineLoading, names }: { mine: CharacterRow[]; min
 // ------------------------------------------------------------------ match detail
 
 function MatchDetail({ id, mine, names }: { id: string; mine: CharacterRow[]; names: NameMap }) {
-  const { data: m, isLoading, error } = useMatch(id);
+  const { data: indexed, isLoading, error } = useMatch(id);
   const { address } = useAccount();
   const c = contracts();
-  const revealDeadline = useReadContract({ ...c.matchManager, functionName: "revealDeadline", args: [BigInt(id)], query: { enabled: !!m && m.status === "Accepted" } });
+  // The indexer lags the chain by seconds to minutes. Everything that gates an action (accept, commit, reveal) is
+  // read live from the contract every few seconds, so a confirmed transaction hides its button at once and the
+  // same action cannot be sent twice.
+  const onchain = useReadContract({ ...c.matchManager, functionName: "getMatch", args: [BigInt(id)], query: { refetchInterval: 4000 } });
+  const m = indexed ? withChainState(indexed, onchain.data) : indexed;
+  const revealDeadline = useReadContract({ ...c.matchManager, functionName: "revealDeadline", args: [BigInt(id)], query: { enabled: !!m && m.status === "Accepted", refetchInterval: 15_000 } });
   const charA = m ? names.get(m.idA) : undefined;
   const charB = m?.idB ? names.get(m.idB) : undefined;
   const now = Date.now();

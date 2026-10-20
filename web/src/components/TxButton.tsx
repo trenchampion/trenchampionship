@@ -33,16 +33,24 @@ export function TxButton({ label, disabled, primary, danger, size = "md", build,
   const { isConnected, chainId } = useAccount();
   const { switchChain, isPending: switching } = useSwitchChain();
   const [localError, setLocalError] = useState<string | null>(null);
+  // After a confirmation the button stays locked until the page reflects the new state (or 20 s), so one action
+  // is never sent twice while the indexer catches up.
+  const [locked, setLocked] = useState(false);
 
   useEffect(() => {
     if (receipt.isSuccess) {
-      // give the indexer a moment, then refresh everything
+      setLocked(true);
+      // give the indexer a moment, then refresh everything; keep the button locked a while longer
       const t = setTimeout(() => {
         void qc.invalidateQueries();
         onDone?.();
         reset();
       }, 2500);
-      return () => clearTimeout(t);
+      const t2 = setTimeout(() => setLocked(false), 20_000);
+      return () => {
+        clearTimeout(t);
+        clearTimeout(t2);
+      };
     }
   }, [receipt.isSuccess, qc, onDone, reset]);
 
@@ -69,7 +77,7 @@ export function TxButton({ label, disabled, primary, danger, size = "md", build,
       <button
         type="button"
         className={`btn ${toneClass} ${sizeClass}`}
-        disabled={disabled || busy || !isConnected}
+        disabled={disabled || busy || locked || !isConnected}
         aria-busy={busy}
         onClick={async () => {
           setLocalError(null);
@@ -81,7 +89,7 @@ export function TxButton({ label, disabled, primary, danger, size = "md", build,
           }
         }}
       >
-        {busy ? (isPending ? "Confirm in wallet…" : "Waiting for confirmation…") : label}
+        {busy ? (isPending ? "Confirm in wallet…" : "Waiting for confirmation…") : locked ? "Confirmed" : label}
       </button>
       {err && (
         <span className="bad text-xs" role="alert">

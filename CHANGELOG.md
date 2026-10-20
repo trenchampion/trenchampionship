@@ -5,6 +5,14 @@ the first testnet deploy.
 
 ## [Unreleased]
 
+### No more double submissions in the Arena (2026-10-20)
+- The match page gated accept, commit and reveal on the indexer, which lags the chain by seconds to minutes, so a
+  player whose transaction had already succeeded still saw the button and sent the same action again (the second
+  one reverted). The page now reads the match state live from the contract every few seconds and overlays it on the
+  indexer row, and every transaction button stays locked for 20 seconds after a confirmation.
+- Token page: definition lists with long values use a label column and left-aligned wrapping text; the header no
+  longer overflows between 1280 and 1440 px (the external Get TRCH link left the header; it stays in the footer).
+
 ### Action buttons wherever a player acts (2026-10-20)
 - Every match row in the Arena ends with a button that names the one thing the viewer can do: Accept challenge,
   Commit tactics, Reveal, Stake on a side, Manage challenge, View match or View result (before, the only way in was
