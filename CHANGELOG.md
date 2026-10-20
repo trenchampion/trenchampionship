@@ -5,6 +5,12 @@ the first testnet deploy.
 
 ## [Unreleased]
 
+### Basescan verification (2026-10-20)
+- All 17 mainnet contracts are verified on Basescan with exact matches (and on Sourcify), next to the Blockscout
+  verification from deploy day. `ops/verify-basescan.sh` submits standard-JSON input straight to the Etherscan v2
+  API, because the forge verifier is refused for Base on Etherscan's free tier while the endpoints themselves are
+  not. DEPLOY.md links both explorers for every address.
+
 ### No more double submissions in the Arena (2026-10-20)
 - The match page gated accept, commit and reveal on the indexer, which lags the chain by seconds to minutes, so a
   player whose transaction had already succeeded still saw the button and sent the same action again (the second

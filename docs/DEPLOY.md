@@ -39,8 +39,10 @@ An interrupted broadcast is resumed with the same command plus `--resume`.
 Simulation on Base Sepolia (2026-10-05): 25.1 M gas, ≈ 0.0003 ETH at 0.01 gwei; so you need
 FOUNDER_BUY_ETH + ~0.001 ETH reserve for gas.
 
-Verification: Blockscout needs no key. The alternative is Basescan with an Etherscan V2 key:
-`--verifier etherscan --etherscan-api-key $ETHERSCAN_API_KEY`. The CharacterToken and CharacterPool that the
+Verification: Blockscout needs no key. Basescan needs an Etherscan V2 key; since Etherscan moved Base out of its free
+API tier `forge --verifier etherscan` stops with "Free API access is not supported for this chain", but the
+verification endpoints themselves still take a free key, so `ops/verify-basescan.sh` calls them directly with
+standard-JSON input (17/17 exact matches on mainnet, 2026-10-20). The CharacterToken and CharacterPool that the
 Factory creates later are verified once, manually (`forge verify-contract`); the explorer recognises other instances of the same
 bytecode by itself.
 
@@ -218,7 +220,9 @@ cast call $NFT "tokenURI(uint256)(string)" 1 --rpc-url $RPC | head -c 80   # aft
 Verification: if `--verify` is rate-limited (429, as on testnet), run the standard-json loop: for each contract
 `forge verify-contract --show-standard-json-input <addr> src/X.sol:X > X.json` and submit to
 `https://base.blockscout.com/api/v2/smart-contracts/<addr>/verification/via/standard-input` every ~30 min until
-`is_verified` is true. Basescan alternative: `--verifier etherscan --etherscan-api-key $ETHERSCAN_API_KEY`.
+`is_verified` is true (`ops/verify-blockscout.sh`). Basescan: `ETHERSCAN_API_KEY=... bash ../ops/verify-basescan.sh`
+from the contracts directory of the release commit (direct Etherscan v2 API calls; the forge verifier is blocked for
+Base on the free tier).
 
 Commit `deployments/8453.json` and `broadcast/Deploy.s.sol/8453/run-latest.json`; add the address table to this file
 (section "Addresses"), set `launch-ui/index.html` `NETWORKS[8453].pool` and move the `selected` attribute of the chain picker to the 8453 option, write the CHANGELOG `## [1.0.0]` entry and tag
@@ -367,29 +371,31 @@ sub-second medians, roughly three times the realistic peak of a thousand open ta
 
 | Contract | Address | Explorer |
 | --- | --- | --- |
-| PortraitBase | `0x6cD133FE3fd12Fc42BE36e48B569ef6fCa317d98` | [Blockscout](https://base.blockscout.com/address/0x6cD133FE3fd12Fc42BE36e48B569ef6fCa317d98) |
-| PortraitBody | `0x174a555c0416Cca5cD7f83Dea89e8F4fCca613Bd` | [Blockscout](https://base.blockscout.com/address/0x174a555c0416Cca5cD7f83Dea89e8F4fCca613Bd) |
-| PortraitFace | `0x2d400cFE0611C708c063CE16846B9512dFCf2ECb` | [Blockscout](https://base.blockscout.com/address/0x2d400cFE0611C708c063CE16846B9512dFCf2ECb) |
-| PortraitItems | `0xc428C26835943A73485D7677d9Af2896d8640B2C` | [Blockscout](https://base.blockscout.com/address/0xc428C26835943A73485D7677d9Af2896d8640B2C) |
-| PortraitArms | `0x90A3cC29DE1fb55F1C112a6c9BeC7EE33b780115` | [Blockscout](https://base.blockscout.com/address/0x90A3cC29DE1fb55F1C112a6c9BeC7EE33b780115) |
-| CharacterPortrait | `0xe5301248e097B5c7CA567638B9021925d8416bC5` | [Blockscout](https://base.blockscout.com/address/0xe5301248e097B5c7CA567638B9021925d8416bC5) |
-| TLToken | `0x32602ce776A045145e94507030E0C0cA8E92BD18` | [Blockscout](https://base.blockscout.com/address/0x32602ce776A045145e94507030E0C0cA8E92BD18) |
-| LaunchPool | `0x6C58A3ac191fE0f257a9864Ac880527842519d60` | [Blockscout](https://base.blockscout.com/address/0x6C58A3ac191fE0f257a9864Ac880527842519d60) |
-| CharacterFactory | `0x458747D2a32d1f7480AcFf8F3A06D4f4d9C3624d` | [Blockscout](https://base.blockscout.com/address/0x458747D2a32d1f7480AcFf8F3A06D4f4d9C3624d) |
-| ControllerNFT | `0x7Ae59A229E6944969833EbaBa8A68566DaAf1036` | [Blockscout](https://base.blockscout.com/address/0x7Ae59A229E6944969833EbaBa8A68566DaAf1036) |
-| CreatorVesting | `0x3550c55f5494487dB2ad4B527EB455825B6C67E9` | [Blockscout](https://base.blockscout.com/address/0x3550c55f5494487dB2ad4B527EB455825B6C67E9) |
-| RewardPool | `0xC682820c5C4266A2DED2CD2f9ac089A3b118900c` | [Blockscout](https://base.blockscout.com/address/0xC682820c5C4266A2DED2CD2f9ac089A3b118900c) |
-| StakingVault | `0x8DA6efD7251038edBDfc272e37782Ed7a35841b1` | [Blockscout](https://base.blockscout.com/address/0x8DA6efD7251038edBDfc272e37782Ed7a35841b1) |
-| Rating | `0xEa224cDd8597f55546B4Cc2fCd414A6b16F8E9BB` | [Blockscout](https://base.blockscout.com/address/0xEa224cDd8597f55546B4Cc2fCd414A6b16F8E9BB) |
-| MatchManager | `0xDBb200d80E9Cd6fE886b457C1aE2EA08c49c16D4` | [Blockscout](https://base.blockscout.com/address/0xDBb200d80E9Cd6fE886b457C1aE2EA08c49c16D4) |
-| Tournament | `0x1Ec83eB5522E2F88f77Ac36D9715706449DEfaB2` | [Blockscout](https://base.blockscout.com/address/0x1Ec83eB5522E2F88f77Ac36D9715706449DEfaB2) |
-| AmmFactory | `0x5e3bf147829aAaE1b1EE585bF8e9065bE8208641` | [Blockscout](https://base.blockscout.com/address/0x5e3bf147829aAaE1b1EE585bF8e9065bE8208641) |
+| PortraitBase | `0x6cD133FE3fd12Fc42BE36e48B569ef6fCa317d98` | [Blockscout](https://base.blockscout.com/address/0x6cD133FE3fd12Fc42BE36e48B569ef6fCa317d98) · [Basescan](https://basescan.org/address/0x6cD133FE3fd12Fc42BE36e48B569ef6fCa317d98#code) |
+| PortraitBody | `0x174a555c0416Cca5cD7f83Dea89e8F4fCca613Bd` | [Blockscout](https://base.blockscout.com/address/0x174a555c0416Cca5cD7f83Dea89e8F4fCca613Bd) · [Basescan](https://basescan.org/address/0x174a555c0416Cca5cD7f83Dea89e8F4fCca613Bd#code) |
+| PortraitFace | `0x2d400cFE0611C708c063CE16846B9512dFCf2ECb` | [Blockscout](https://base.blockscout.com/address/0x2d400cFE0611C708c063CE16846B9512dFCf2ECb) · [Basescan](https://basescan.org/address/0x2d400cFE0611C708c063CE16846B9512dFCf2ECb#code) |
+| PortraitItems | `0xc428C26835943A73485D7677d9Af2896d8640B2C` | [Blockscout](https://base.blockscout.com/address/0xc428C26835943A73485D7677d9Af2896d8640B2C) · [Basescan](https://basescan.org/address/0xc428C26835943A73485D7677d9Af2896d8640B2C#code) |
+| PortraitArms | `0x90A3cC29DE1fb55F1C112a6c9BeC7EE33b780115` | [Blockscout](https://base.blockscout.com/address/0x90A3cC29DE1fb55F1C112a6c9BeC7EE33b780115) · [Basescan](https://basescan.org/address/0x90A3cC29DE1fb55F1C112a6c9BeC7EE33b780115#code) |
+| CharacterPortrait | `0xe5301248e097B5c7CA567638B9021925d8416bC5` | [Blockscout](https://base.blockscout.com/address/0xe5301248e097B5c7CA567638B9021925d8416bC5) · [Basescan](https://basescan.org/address/0xe5301248e097B5c7CA567638B9021925d8416bC5#code) |
+| TLToken | `0x32602ce776A045145e94507030E0C0cA8E92BD18` | [Blockscout](https://base.blockscout.com/address/0x32602ce776A045145e94507030E0C0cA8E92BD18) · [Basescan](https://basescan.org/address/0x32602ce776A045145e94507030E0C0cA8E92BD18#code) |
+| LaunchPool | `0x6C58A3ac191fE0f257a9864Ac880527842519d60` | [Blockscout](https://base.blockscout.com/address/0x6C58A3ac191fE0f257a9864Ac880527842519d60) · [Basescan](https://basescan.org/address/0x6C58A3ac191fE0f257a9864Ac880527842519d60#code) |
+| CharacterFactory | `0x458747D2a32d1f7480AcFf8F3A06D4f4d9C3624d` | [Blockscout](https://base.blockscout.com/address/0x458747D2a32d1f7480AcFf8F3A06D4f4d9C3624d) · [Basescan](https://basescan.org/address/0x458747D2a32d1f7480AcFf8F3A06D4f4d9C3624d#code) |
+| ControllerNFT | `0x7Ae59A229E6944969833EbaBa8A68566DaAf1036` | [Blockscout](https://base.blockscout.com/address/0x7Ae59A229E6944969833EbaBa8A68566DaAf1036) · [Basescan](https://basescan.org/address/0x7Ae59A229E6944969833EbaBa8A68566DaAf1036#code) |
+| CreatorVesting | `0x3550c55f5494487dB2ad4B527EB455825B6C67E9` | [Blockscout](https://base.blockscout.com/address/0x3550c55f5494487dB2ad4B527EB455825B6C67E9) · [Basescan](https://basescan.org/address/0x3550c55f5494487dB2ad4B527EB455825B6C67E9#code) |
+| RewardPool | `0xC682820c5C4266A2DED2CD2f9ac089A3b118900c` | [Blockscout](https://base.blockscout.com/address/0xC682820c5C4266A2DED2CD2f9ac089A3b118900c) · [Basescan](https://basescan.org/address/0xC682820c5C4266A2DED2CD2f9ac089A3b118900c#code) |
+| StakingVault | `0x8DA6efD7251038edBDfc272e37782Ed7a35841b1` | [Blockscout](https://base.blockscout.com/address/0x8DA6efD7251038edBDfc272e37782Ed7a35841b1) · [Basescan](https://basescan.org/address/0x8DA6efD7251038edBDfc272e37782Ed7a35841b1#code) |
+| Rating | `0xEa224cDd8597f55546B4Cc2fCd414A6b16F8E9BB` | [Blockscout](https://base.blockscout.com/address/0xEa224cDd8597f55546B4Cc2fCd414A6b16F8E9BB) · [Basescan](https://basescan.org/address/0xEa224cDd8597f55546B4Cc2fCd414A6b16F8E9BB#code) |
+| MatchManager | `0xDBb200d80E9Cd6fE886b457C1aE2EA08c49c16D4` | [Blockscout](https://base.blockscout.com/address/0xDBb200d80E9Cd6fE886b457C1aE2EA08c49c16D4) · [Basescan](https://basescan.org/address/0xDBb200d80E9Cd6fE886b457C1aE2EA08c49c16D4#code) |
+| Tournament | `0x1Ec83eB5522E2F88f77Ac36D9715706449DEfaB2` | [Blockscout](https://base.blockscout.com/address/0x1Ec83eB5522E2F88f77Ac36D9715706449DEfaB2) · [Basescan](https://basescan.org/address/0x1Ec83eB5522E2F88f77Ac36D9715706449DEfaB2#code) |
+| AmmFactory | `0x5e3bf147829aAaE1b1EE585bF8e9065bE8208641` | [Blockscout](https://base.blockscout.com/address/0x5e3bf147829aAaE1b1EE585bF8e9065bE8208641) · [Basescan](https://basescan.org/address/0x5e3bf147829aAaE1b1EE585bF8e9065bE8208641#code) |
 
 Seventeen contracts in eighteen transactions from block 52815684, founder buy 285714285714285714 wei (2/7 ETH) executed
 in the LaunchPool constructor, `realReserve` 2/7 ETH, 100 M TRCH in the RewardPool, ~200 M TRCH on the deployer, all
 wiring read back from the chain (DEPLOY.md 6.3). Code of commit 56c46d5 (the 2026-10-16 review fixes plus the MIT
 license). Blockscout verification runs in `verify8453` on the server (Cloudflare in front of base.blockscout.com needs a
-browser user agent, so `forge --verify` fails there; the standard-JSON loop works).
+browser user agent, so `forge --verify` fails there; the standard-JSON loop works); 17/17 verified. Basescan: 17/17
+verified with exact matches on 2026-10-20 through `ops/verify-basescan.sh` (the Etherscan free tier rejects the forge
+verifier for Base, the plain API calls pass). Every contract is also an exact match on Sourcify.
 
 ### Base Sepolia (84532), block 48148395 (deployment of 2026-10-15, evening: contracts after the security review)
 

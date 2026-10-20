@@ -88,5 +88,7 @@ schema stays in the PGlite directory until `indexer/.ponder` is cleaned.
 3. Pin the new CID on the second node as well (`ipfs pin add <cid>`, then `ipfs pin rm <old>`). eth.limo refreshes its
    IPNS cache within about an hour.
 
-`ops/verify-blockscout.sh` is the Blockscout verification loop for mainnet (run on the server, see its header), and
-`ops/post-deploy-check.sh` reads back the deployment (DEPLOY.md 6.3) from `deployments/8453.json`.
+`ops/verify-blockscout.sh` is the Blockscout verification loop for mainnet (run on the server, see its header),
+`ops/verify-basescan.sh` verifies the same contracts on Basescan through the Etherscan v2 API (run from the contracts
+directory of the release commit with `ETHERSCAN_API_KEY` set; see its header for why the forge verifier is not used),
+and `ops/post-deploy-check.sh` reads back the deployment (DEPLOY.md 6.3) from `deployments/8453.json`.
