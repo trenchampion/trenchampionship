@@ -13,7 +13,7 @@ Tested on Ubuntu 24.04 (Njalla VPS; an INCUS container, so no swap). Sizing meas
 | File | Installed as | Purpose |
 | --- | --- | --- |
 | `setup-server.sh` | run once as a sudo user | installs and configures everything below; idempotent |
-| `Caddyfile` | `/etc/caddy/Caddyfile` | TLS, gzip; `INDEXER_HOST` -> nginx cache, `PREVIEW_HOST` -> static preview |
+| `Caddyfile` | `/etc/caddy/Caddyfile` | TLS, gzip; `INDEXER_HOST` -> nginx cache, `PREVIEW_HOST` and `trenchampionship.com` -> static site (www redirects to the apex) |
 | `nginx-indexer-cache.conf` | `/etc/nginx/conf.d/indexer-cache.conf` | 5 s cache of GraphQL answers, request collapsing, stale on error, per-IP rate limit |
 | `ponder.service` | `/etc/systemd/system/ponder.service` | indexer on 127.0.0.1:42069 with a memory cap and automatic restart |
 | `ipfs.service` | `/etc/systemd/system/ipfs.service` | kubo with a Go memory limit |

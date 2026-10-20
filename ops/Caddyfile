@@ -12,3 +12,15 @@ __PREVIEW_HOST__ {
     file_server
     try_files {path} {path}/ {path}.html
 }
+
+# The project domain serves the same static build (the ENS name on eth.limo stays the IPFS copy).
+trenchampionship.com {
+    encode gzip
+    root * /var/www/preview
+    file_server
+    try_files {path} {path}/ {path}.html
+}
+
+www.trenchampionship.com {
+    redir https://trenchampionship.com{uri} permanent
+}
