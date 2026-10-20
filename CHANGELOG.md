@@ -5,6 +5,14 @@ the first testnet deploy.
 
 ## [Unreleased]
 
+### Action buttons wherever a player acts (2026-10-20)
+- Every match row in the Arena ends with a button that names the one thing the viewer can do: Accept challenge,
+  Commit tactics, Reveal, Stake on a side, Manage challenge, View match or View result (before, the only way in was
+  the match number). Your characters in the Arena get a Challenge button that jumps to the challenge form; the League
+  top 10 gets a Challenge button per row.
+- CI: the lockfile records pnpm 12.8.1 itself (pnpm 12 does this once packageManager is pinned), which the frozen
+  install in CI requires.
+
 ### Token page and CI repair (2026-10-20)
 - New page /token/: the official TRCH contract with copy and add-to-wallet buttons and explorer links, what the token is
   for, supply and distribution (including the founder purchase from the FounderBuy event), live price, reserve,

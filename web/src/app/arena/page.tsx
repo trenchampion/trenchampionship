@@ -74,11 +74,11 @@ function ArenaInner() {
           {matchId ? <MatchDetail id={matchId} mine={mine.data ?? []} names={names} /> : <ChallengeForm mine={mine.data ?? []} mineLoading={mine.isLoading} names={names} />}
           <Card pad={false}>
             <CardHead title="Challenges awaiting acceptance" description="Open challenges can be accepted by anyone with an eligible character." />
-            <MatchList rows={open.data} loading={open.isLoading} error={open.error} names={names} empty="No challenge is waiting right now." />
+            <MatchList rows={open.data} loading={open.isLoading} error={open.error} names={names} empty="No challenge is waiting right now." me={address?.toLowerCase()} />
           </Card>
           <Card pad={false}>
             <CardHead title="Matches in progress" description="Staking, commit and reveal windows are running." />
-            <MatchList rows={active.data} loading={active.isLoading} error={active.error} names={names} empty="No match is in progress." />
+            <MatchList rows={active.data} loading={active.isLoading} error={active.error} names={names} empty="No match is in progress." me={address?.toLowerCase()} />
           </Card>
         </div>
         <aside className="flex flex-col gap-6">
@@ -103,6 +103,11 @@ function ArenaInner() {
                     <span className="flex shrink-0 items-center gap-2">
                       {ch.licensed && <Badge tone="accent">licensed</Badge>}
                       <span className="muted num text-xs">rating {ch.rating}</span>
+                      {!ch.retired && (
+                        <a href="#new-challenge" className="btn btn-sm">
+                          Challenge
+                        </a>
+                      )}
                     </span>
                   </li>
                 ))}
@@ -112,11 +117,51 @@ function ArenaInner() {
           </Card>
           <Card pad={false}>
             <CardHead title="Recently resolved" />
-            <MatchList rows={recent.data} loading={recent.isLoading} error={recent.error} names={names} empty="Nothing resolved yet." compact />
+            <MatchList rows={recent.data} loading={recent.isLoading} error={recent.error} names={names} empty="Nothing resolved yet." compact me={address?.toLowerCase()} />
           </Card>
         </aside>
       </div>
     </div>
+  );
+}
+
+/** The one thing the viewer can do with this match right now, as a button that opens the match page. */
+function MatchAction({ m, me }: { m: MatchRow; me?: string }) {
+  const href = `/arena/?match=${m.id}`;
+  const isA = !!me && m.controllerA.toLowerCase() === me;
+  const isB = !!me && !!m.controllerB && m.controllerB.toLowerCase() === me;
+  let label = "View match";
+  let primary = false;
+  if (m.outcome) {
+    label = "View result";
+  } else if (m.status === "Challenged") {
+    if (isA) label = "Manage challenge";
+    else {
+      label = "Accept challenge";
+      primary = true;
+    }
+  } else if (m.status === "Accepted") {
+    const both = m.committedA && m.committedB;
+    if (isA || isB) {
+      const myCommitted = isA ? m.committedA : m.committedB;
+      const myRevealed = isA ? m.revealedA : m.revealedB;
+      if (!myCommitted) {
+        label = "Commit tactics";
+        primary = true;
+      } else if (both && !myRevealed) {
+        label = "Reveal";
+        primary = true;
+      } else {
+        label = "View match";
+      }
+    } else if (m.stake !== "0" && m.stakingCloseAt && Number(m.stakingCloseAt) * 1000 > Date.now()) {
+      label = "Stake on a side";
+    }
+  }
+  return (
+    <Link href={href} className={`btn btn-sm whitespace-nowrap ${primary ? "btn-primary" : ""}`}>
+      {label}
+    </Link>
   );
 }
 
@@ -141,7 +186,7 @@ function statusBadge(m: MatchRow) {
   return <Badge tone="accent">commit · {countdown(m.commitDeadline)}</Badge>;
 }
 
-function MatchList({ rows, loading, error, names, empty, compact }: { rows: MatchRow[] | undefined; loading: boolean; error: Error | null; names: NameMap; empty: string; compact?: boolean }) {
+function MatchList({ rows, loading, error, names, empty, compact, me }: { rows: MatchRow[] | undefined; loading: boolean; error: Error | null; names: NameMap; empty: string; compact?: boolean; me?: string }) {
   if (error) {
     return (
       <div className="card-pad">
@@ -193,6 +238,7 @@ function MatchList({ rows, loading, error, names, empty, compact }: { rows: Matc
               { key: "preset", header: "Preset", render: (m: MatchRow) => <span className="muted">{presetName(m.preset)}</span> },
             ]),
         { key: "status", header: "Status", render: (m) => statusBadge(m) },
+        { key: "act", header: "", align: "right" as const, render: (m) => <MatchAction m={m} me={me} /> },
       ]}
       rows={rows}
       loading={loading}
@@ -257,7 +303,7 @@ function ChallengeForm({ mine, mineLoading, names }: { mine: CharacterRow[]; min
   const opponentRow = opponent ? names.get(opponent) : undefined;
 
   return (
-    <Card pad={false}>
+    <Card pad={false} id="new-challenge">
       <CardHead eyebrow="New challenge" title="Send a challenge" description="The stake is escrowed now and refunded if nobody accepts within 48 hours." />
       <CardBody>
         <WalletGate what="send a challenge">

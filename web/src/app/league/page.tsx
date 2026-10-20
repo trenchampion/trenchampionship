@@ -99,6 +99,16 @@ export default function LeaguePage() {
                   { key: "rating", header: "Rating", align: "right", render: (r) => <span className="num">{byId.get(r.id)?.rating ?? "—"}</span> },
                   { key: "share", header: "Share", align: "right", render: (r) => <span className="num muted">{pct(SPLIT[r.place] ?? 0, 0)}</span> },
                   { key: "reward", header: "≈ reward", align: "right", render: (r) => <span className="num">{tl((prize * BigInt(SPLIT[r.place] ?? 0)) / 10_000n)}</span> },
+                  {
+                    key: "act",
+                    header: "",
+                    align: "right",
+                    render: (r) => (
+                      <Link href={`/arena/?opponent=${r.id}`} className="btn btn-sm whitespace-nowrap">
+                        Challenge
+                      </Link>
+                    ),
+                  },
                 ]}
                 rows={topRows}
                 loading={top.isLoading}
