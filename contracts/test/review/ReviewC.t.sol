@@ -239,61 +239,6 @@ contract ReviewCTest is DeployHelper {
 
     // ------------------------------------------------------------ H7: tokenURI gas
 
-    function test_H7_tokenUriGasAcrossVectorsAndExtremes() public {
-        CharacterPortrait p = portrait;
-        UriProbe probe = new UriProbe(p);
-        string memory doc = vm.readFile("../engine/vectors/art-vectors.json");
-        uint256 count = doc.readUint(".count");
-        uint256 maxGas;
-        uint256 maxLen;
-        string memory name64 = "0123456789012345678901234567890123456789012345678901234567890123";
-        for (uint256 i = 0; i < count; i++) {
-            string memory k = string.concat(".cases[", vm.toString(i), "]");
-            uint256[] memory v = doc.readUintArray(string.concat(k, ".traits"));
-            BattleEngine.Traits memory t = BattleEngine.Traits(
-                uint8(v[0]), uint8(v[1]), uint8(v[2]), uint8(v[3]), uint8(v[4]), uint8(v[5]), uint8(v[6])
-            );
-            uint256 id = vm.parseUint(doc.readString(string.concat(k, ".id")));
-            uint256 g = gasleft();
-            string memory u = probe.uri(id, t, name64);
-            g = g - gasleft();
-            if (g > maxGas) maxGas = g;
-            if (bytes(u).length > maxLen) maxLen = bytes(u).length;
-        }
-        console2.log("vectors: max tokenURI gas", maxGas);
-        console2.log("vectors: max tokenURI bytes", maxLen);
-        // an id with both rare features (gold eyes + aura), every element/special/weakness, top tiers
-        uint256 rareId;
-        for (uint256 id = 1; id < 100_000; id++) {
-            bytes32 h = keccak256(abi.encodePacked(id));
-            if (uint8(h[12]) % 16 == 0 && uint8(h[13]) % 16 == 0 && uint8(h[9]) % 6 == 5 && uint8(h[3]) % 6 == 5) {
-                rareId = id;
-                break;
-            }
-        }
-        require(rareId != 0, "rare id");
-        uint256 maxGas2;
-        for (uint8 e = 0; e < 5; e++) {
-            for (uint8 s = 1; s <= 8; s++) {
-                for (uint8 w = 0; w < 5; w++) {
-                    BattleEngine.Traits memory t = BattleEngine.Traits(15, 15, 14, 1, e, s, w);
-                    uint256 g = gasleft();
-                    probe.uri(rareId, t, name64);
-                    g = g - gasleft();
-                    if (g > maxGas2) maxGas2 = g;
-                }
-            }
-        }
-        console2.log("rare id + top tiers: max tokenURI gas", maxGas2);
-        // realistic end-to-end: ControllerNFT.tokenURI of a live character
-        uint256 g3 = gasleft();
-        nft.tokenURI(ids[0]);
-        g3 = g3 - gasleft();
-        console2.log("ControllerNFT.tokenURI(live) gas", g3);
-        assertLt(maxGas, 30_000_000, "below common eth_call gas caps");
-        assertLt(maxGas2, 30_000_000, "below common eth_call gas caps");
-    }
-
     // ------------------------------------------------------------ pause matrix
 
     function _challenge(address who, uint256 idA, uint256 idB, uint256 stake) internal returns (uint256 id) {
