@@ -77,3 +77,16 @@ schema stays in the PGlite directory until `indexer/.ponder` is cleaned.
 - `sudo journalctl -u ponder | grep -i "failed"`: public RPC rate limits show up here first; a private free-tier RPC
   URL in `.env.local` is the fix.
 - Disk: PGlite grows with the chain history (49 MB after a day of testnet); 30 GB lasts years.
+
+## Releasing the site (mainnet, since 2026-10-19)
+
+1. Build: `NEXT_PUBLIC_CHAIN_ID=8453 NEXT_PUBLIC_INDEXER_URL=https://45-142-142-2.sslip.io pnpm build` in `web/`, then
+   `cp launch-ui/index.html web/out/launch-ui/index.html` and `tar czf site.tgz -C web/out .`.
+2. Copy `site.tgz` and `ops/publish-site.sh` to the server as `/home/admin/site.tgz` and run `bash publish-site.sh`:
+   it updates the preview directory, adds the directory to the IPFS node, publishes the CID under the IPNS key `site`
+   (the ENS content hash points at that IPNS name, so no ENS transaction is needed) and unpins the previous CID.
+3. Pin the new CID on the second node as well (`ipfs pin add <cid>`, then `ipfs pin rm <old>`). eth.limo refreshes its
+   IPNS cache within about an hour.
+
+`ops/verify-blockscout.sh` is the Blockscout verification loop for mainnet (run on the server, see its header), and
+`ops/post-deploy-check.sh` reads back the deployment (DEPLOY.md 6.3) from `deployments/8453.json`.
