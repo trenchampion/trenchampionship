@@ -389,6 +389,9 @@ sub-second medians, roughly three times the realistic peak of a thousand open ta
 | Tournament | `0x1Ec83eB5522E2F88f77Ac36D9715706449DEfaB2` | [Blockscout](https://base.blockscout.com/address/0x1Ec83eB5522E2F88f77Ac36D9715706449DEfaB2) · [Basescan](https://basescan.org/address/0x1Ec83eB5522E2F88f77Ac36D9715706449DEfaB2#code) |
 | AmmFactory | `0x5e3bf147829aAaE1b1EE585bF8e9065bE8208641` | [Blockscout](https://base.blockscout.com/address/0x5e3bf147829aAaE1b1EE585bF8e9065bE8208641) · [Basescan](https://basescan.org/address/0x5e3bf147829aAaE1b1EE585bF8e9065bE8208641#code) |
 
+External: Uniswap v3 pool TRCH/WETH, fee 1 %, `0xd31a17bEfC5D469b319E3363508D39528322D6fB` (opened 2026-10-20 by the deployer with 0.04 ETH + 21.73 M TRCH
+at the curve's spot price, full range; for price trackers only, the LaunchPool stays the primary market).
+
 Seventeen contracts in eighteen transactions from block 52815684, founder buy 285714285714285714 wei (2/7 ETH) executed
 in the LaunchPool constructor, `realReserve` 2/7 ETH, 100 M TRCH in the RewardPool, ~200 M TRCH on the deployer, all
 wiring read back from the chain (DEPLOY.md 6.3). Code of commit 56c46d5 (the 2026-10-16 review fixes plus the MIT

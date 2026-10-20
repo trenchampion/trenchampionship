@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { formatUnits } from "viem";
 import { useAccount, useReadContract, useWalletClient } from "wagmi";
 import { Badge } from "@/components/Badge";
@@ -11,7 +11,7 @@ import { Guide } from "@/components/Guide";
 import { IconExternal } from "@/components/Icons";
 import { PageHeader } from "@/components/Section";
 import { Stat, StatGrid } from "@/components/Stat";
-import { addresses, CHAIN_ID, chain, CONFIG, GITHUB_URL, IS_TESTNET, launchUiUrl } from "@/lib/config";
+import { addresses, CHAIN_ID, chain, CONFIG, DEX_POOLS, GITHUB_URL, IS_TESTNET, launchUiUrl } from "@/lib/config";
 import { contracts } from "@/lib/contracts";
 import { dateOnly, eth, pct, tl } from "@/lib/format";
 import { useFounderBuy, useProtocolStats } from "@/lib/queries";
@@ -76,6 +76,7 @@ export default function TokenPage() {
   const buyUrl = launchUiUrl(CHAIN_ID, a.LaunchPool);
   const blockscout = BLOCKSCOUT[CHAIN_ID];
   const basescan = BASESCAN[CHAIN_ID];
+  const dexPools = DEX_POOLS[CHAIN_ID] ?? [];
 
   const supply = useReadContract({ ...c.tl, functionName: "totalSupply" });
   const onCurve = useReadContract({ ...c.launchPool, functionName: "tokenReserve" });
@@ -130,6 +131,11 @@ export default function TokenPage() {
                 Basescan <IconExternal />
               </a>
             )}
+            {dexPools.map((p) => (
+              <a key={p.address} href={p.url} target="_blank" rel="noreferrer" className="btn btn-sm">
+                Uniswap pool <IconExternal />
+              </a>
+            ))}
           </div>
           <dl className="spec text-sm">
             <dt>Name / symbol</dt>
@@ -138,6 +144,15 @@ export default function TokenPage() {
             <dd>18</dd>
             <dt>Standard</dt>
             <dd>ERC-20 (OpenZeppelin), burnable by holders only, no mint function after the constructor</dd>
+            {dexPools.map((p) => (
+              <Fragment key={p.address}>
+                <dt>DEX pool</dt>
+                <dd>
+                  {p.name}: <span className="mono break-all">{p.address}</span>. A small external pool so that price trackers can
+                  see TRCH; the LaunchPool curve below is the primary market and has far deeper liquidity.
+                </dd>
+              </Fragment>
+            ))}
             <dt>LaunchPool (where TRCH is bought and sold)</dt>
             <dd className="mono break-all">{a.LaunchPool}</dd>
           </dl>

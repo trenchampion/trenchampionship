@@ -20,6 +20,11 @@ export const GITHUB_URL = "https://github.com/TRENCHAMPION/trenchampionship";
 export const ENS_NAME = "trenchampionship.eth";
 /** Official X (Twitter) account; the footer link is hidden while empty. */
 export const X_URL = "https://x.com/trenchampions";
+export const SITE_URL = "https://trenchampionship.com";
+/** External DEX pools for TRCH (for price aggregators; the LaunchPool curve stays the primary market). */
+export const DEX_POOLS: Record<number, { name: string; address: `0x${string}`; url: string }[]> = {
+  8453: [{ name: "Uniswap v3 TRCH/WETH 1 %", address: "0xd31a17bEfC5D469b319E3363508D39528322D6fB", url: "https://app.uniswap.org/explore/pools/base/0xd31a17bEfC5D469b319E3363508D39528322D6fB" }],
+};
 
 export const anvil = defineChain({
   id: 31337,

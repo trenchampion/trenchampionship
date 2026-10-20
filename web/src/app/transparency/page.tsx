@@ -1,5 +1,6 @@
 "use client";
 
+import { Fragment } from "react";
 import Link from "next/link";
 import { useReadContract } from "wagmi";
 import { AddressLink } from "@/components/AddressLink";
@@ -12,7 +13,7 @@ import { IconExternal } from "@/components/Icons";
 import { PageHeader } from "@/components/Section";
 import { Stat, StatGrid } from "@/components/Stat";
 import { Table } from "@/components/Table";
-import { addresses, CHAIN_ID, chain, CONFIG, GITHUB_URL, IS_TESTNET, launchUiUrl } from "@/lib/config";
+import { addresses, chain, CHAIN_ID, CONFIG, DEX_POOLS, GITHUB_URL, IS_TESTNET, launchUiUrl } from "@/lib/config";
 import { contracts } from "@/lib/contracts";
 import { eth, pct, tl, when } from "@/lib/format";
 import { useProtocolStats, useTreasuryFlows, type TreasuryFlow } from "@/lib/queries";
@@ -75,6 +76,17 @@ export default function TransparencyPage() {
         <br />
         <span className="mono break-all">LaunchPool {a.LaunchPool}</span>
         <br />
+        {(DEX_POOLS[CHAIN_ID] ?? []).map((p) => (
+          <Fragment key={p.address}>
+            <span className="mono break-all">
+              {p.name}{" "}
+              <a href={p.url} target="_blank" rel="noreferrer" className="underline">
+                {p.address}
+              </a>
+            </span>
+            <br />
+          </Fragment>
+        ))}
         <Link href="/token/" className="underline">
           Token page: what TRCH is, supply, how to buy
         </Link>

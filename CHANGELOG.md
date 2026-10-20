@@ -5,6 +5,11 @@ the first testnet deploy.
 
 ## [Unreleased]
 
+### Uniswap pool link (2026-10-20)
+- The token page and Transparency list the external Uniswap v3 TRCH/WETH pool (1 % fee) next to the official contract,
+  with a note that the LaunchPool curve remains the primary market. The LaunchPool UI links the token page on the
+  project domain.
+
 ### Project domain (2026-10-20)
 - trenchampionship.com points at the server and serves the same static build as the preview host (Caddy block in
   `ops/Caddyfile`, www redirects to the apex). The ENS name on eth.limo keeps serving the IPFS copy.
