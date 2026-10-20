@@ -850,6 +850,14 @@ table.table .rank {
   height: 28px;
   flex: none;
 }
+/* Full navigation appears at xl (1280px); between 1280 and 1439px the eight links plus the wallet block
+   only fit with tighter links. */
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .nav-link {
+    padding: 0.4rem 0.45rem !important;
+    font-size: 0.84rem !important;
+  }
+}
 .nav-link {
   display: inline-flex;
   align-items: center;
@@ -1026,6 +1034,36 @@ table.table .rank {
   color: var(--text-strong);
   overflow-wrap: anywhere;
 }
+/* Definition list for long, prose-like values: label column of fixed width, value left-aligned and wrapping;
+   stacks on narrow screens. */
+.spec {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.35rem 1.25rem;
+  font-size: 0.9rem;
+}
+.spec dt {
+  color: var(--muted);
+}
+.spec dd {
+  color: var(--text-strong);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  margin-bottom: 0.35rem;
+}
+@media (min-width: 640px) {
+  .spec {
+    grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr);
+    gap: 0.6rem 1.5rem;
+  }
+  .spec dd {
+    margin-bottom: 0;
+  }
+  .spec dt {
+    padding-top: 0.05rem;
+  }
+}
+
 .trait-bar {
   height: 6px;
   border-radius: 999px;

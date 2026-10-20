@@ -131,7 +131,7 @@ export default function TokenPage() {
               </a>
             )}
           </div>
-          <dl className="kv text-sm">
+          <dl className="spec text-sm">
             <dt>Name / symbol</dt>
             <dd>Trenchampionship / TRCH</dd>
             <dt>Decimals</dt>
@@ -192,7 +192,7 @@ export default function TokenPage() {
         <Card pad={false}>
           <CardHead title="Supply and distribution" description="Minted once, in the token's constructor. Nobody can mint more; burns only shrink it." />
           <CardBody className="flex flex-col gap-3 text-sm">
-            <dl className="kv">
+            <dl className="spec">
               <dt>Total minted</dt>
               <dd>{tl(CONFIG.tlSupply)}</dd>
               <dt>Current supply</dt>
@@ -240,7 +240,7 @@ export default function TokenPage() {
             </a>
           }
         />
-        <CardBody className="grid gap-6 text-sm md:grid-cols-2">
+        <CardBody className="grid gap-8 text-sm lg:grid-cols-[1.25fr_1fr]">
           <div className="flex flex-col gap-2 leading-relaxed">
             <p>
               <strong>Buying.</strong> Send ETH on {chain.name}, receive TRCH at the curve price; the more that has been bought, the higher the price. For the first {CONFIG.lpCapPeriodDays} days after deployment the curve accepts at most {eth(CONFIG.lpCapRatePerDayEth, 0)} of net inflow per elapsed day (unused allowance carries over) and {eth(CONFIG.lpMaxBuyPerTxEth, 1)} per purchase: a brake against a rush, not a sale.
@@ -252,7 +252,7 @@ export default function TokenPage() {
               The interface at &quot;Get TRCH&quot; is a separate open-source page anyone can host; it talks to the LaunchPool contract above and nothing else. A secondary DEX market may exist; the curve remains the primary and permanent one.
             </p>
           </div>
-          <dl className="kv self-start">
+          <dl className="spec self-start">
             <dt>Launch cap</dt>
             <dd>{capActive.data === undefined ? "—" : capActive.data ? <Badge tone="accent">active</Badge> : <Badge>expired</Badge>}</dd>
             {capActive.data && (

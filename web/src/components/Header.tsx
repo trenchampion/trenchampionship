@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { addresses, CHAIN_ID, launchUiUrl } from "@/lib/config";
-import { BrandMark, IconClose, IconExternal, IconMenu } from "./Icons";
+import { BrandMark, IconClose, IconMenu } from "./Icons";
 import { WalletButton } from "./WalletButton";
 
 const NAV = [
@@ -21,7 +20,6 @@ const NAV = [
 export function Header() {
   const pathname = usePathname() ?? "/";
   const [open, setOpen] = useState(false);
-  const buyUrl = launchUiUrl(CHAIN_ID, addresses().LaunchPool);
   const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href.replace(/\/$/, "")));
 
   return (
@@ -38,9 +36,6 @@ export function Header() {
               {label}
             </Link>
           ))}
-          <a href={buyUrl} className="nav-link" target="_blank" rel="noreferrer">
-            Get TRCH <IconExternal className="ml-1" />
-          </a>
         </nav>
         <div className="ml-auto hidden xl:block">
           <WalletButton />
@@ -58,9 +53,6 @@ export function Header() {
                 {label}
               </Link>
             ))}
-            <a href={buyUrl} className="nav-link" target="_blank" rel="noreferrer">
-              Get TRCH <IconExternal className="ml-1" />
-            </a>
           </nav>
           <div className="mt-3 border-t border-[var(--line)] pt-3">
             <WalletButton />
