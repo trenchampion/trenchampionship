@@ -47,7 +47,6 @@ jobs:
   engine:
     name: engine (ts vectors)
     runs-on: ubuntu-latest
-    if: ${{ hashFiles('engine/package.json') != '' }}
     defaults:
       run:
         working-directory: engine
@@ -92,7 +91,6 @@ jobs:
   sim:
     name: sim (python)
     runs-on: ubuntu-latest
-    if: ${{ hashFiles('sim/pyproject.toml') != '' }}
     defaults:
       run:
         working-directory: sim
