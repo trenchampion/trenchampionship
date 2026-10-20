@@ -8,6 +8,8 @@ the first testnet deploy.
 ### Project domain (2026-10-20)
 - trenchampionship.com points at the server and serves the same static build as the preview host (Caddy block in
   `ops/Caddyfile`, www redirects to the apex). The ENS name on eth.limo keeps serving the IPFS copy.
+- Token logo files for explorers and aggregators under `web/public/` (token-logo-32.svg, 32/200/512 px PNG), served at
+  the site root.
 
 ### Basescan verification (2026-10-20)
 - All 17 mainnet contracts are verified on Basescan with exact matches (and on Sourcify), next to the Blockscout
