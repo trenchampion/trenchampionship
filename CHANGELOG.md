@@ -5,6 +5,11 @@ the first testnet deploy.
 
 ## [Unreleased]
 
+### Supply endpoints for price trackers (2026-10-21)
+- `https://trenchampionship.com/api/total-supply` and `/api/circulating-supply` return bare numbers in whole TRCH,
+  refreshed from the chain every 5 minutes (`ops/supply-api.sh`). Circulating supply excludes the unsold tokens on the
+  LaunchPool curve and the RewardPool seed.
+
 ### Indexer on keyless public RPCs (2026-10-21)
 - `PONDER_RPC_URL_<chainId>` may list several URLs separated by commas; Ponder spreads realtime requests over them
   and skips a failing one. The mainnet indexer now runs on PublicNode, dRPC and 1RPC instead of a keyed provider

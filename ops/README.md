@@ -90,6 +90,9 @@ schema stays in the PGlite directory until `indexer/.ponder` is cleaned.
 3. Pin the new CID on the second node as well (`ipfs pin add <cid>`, then `ipfs pin rm <old>`). eth.limo refreshes its
    IPNS cache within about an hour.
 
+`ops/supply-api.sh` writes `/var/www/api/total-supply` and `/var/www/api/circulating-supply` (whole TRCH, bare numbers)
+from the chain; cron runs it every 5 minutes and Caddy serves them at `https://trenchampionship.com/api/<name>` for
+CoinGecko and CoinMarketCap (circulating = total minus the unsold curve supply minus the RewardPool seed).
 `ops/verify-blockscout.sh` is the Blockscout verification loop for mainnet (run on the server, see its header),
 `ops/verify-basescan.sh` verifies the same contracts on Basescan through the Etherscan v2 API (run from the contracts
 directory of the release commit with `ETHERSCAN_API_KEY` set; see its header for why the forge verifier is not used),

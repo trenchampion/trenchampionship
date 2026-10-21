@@ -16,6 +16,14 @@ __PREVIEW_HOST__ {
 # The project domain serves the same static build (the ENS name on eth.limo stays the IPFS copy).
 trenchampionship.com {
     encode gzip
+    # Plain-number supply files for price trackers, written by ops/supply-api.sh from cron.
+    handle_path /api/* {
+        root * /var/www/api
+        header Content-Type "text/plain; charset=utf-8"
+        header Access-Control-Allow-Origin *
+        header Cache-Control "public, max-age=120"
+        file_server
+    }
     root * /var/www/preview
     file_server
     try_files {path} {path}/ {path}.html
