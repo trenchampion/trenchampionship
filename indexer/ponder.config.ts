@@ -17,7 +17,10 @@ import { TournamentAbi } from "./abis/Tournament";
 
 /**
  * One deployment per process: CHAIN_ID selects ../contracts/deployments/<id>.json, which the
- * deploy script writes. RPC comes from PONDER_RPC_URL_<id>.
+ * deploy script writes. RPC comes from PONDER_RPC_URL_<id>: one URL, or several separated by commas,
+ * in which case Ponder spreads the requests over them and skips one that fails (keyless public endpoints
+ * are enough for realtime sync). POLLING_INTERVAL_MS (default 2000, the Base block time) sets how often
+ * the head is polled; every poll costs a block and a log request.
  */
 const chainId = Number(process.env.CHAIN_ID ?? "31337");
 const startBlock = Number(process.env.START_BLOCK ?? "0");
@@ -31,6 +34,12 @@ const addr = (name: string): `0x${string}` => {
 };
 
 const chainName = { 31337: "anvil", 84532: "baseSepolia", 8453: "base" }[chainId] ?? `chain${chainId}`;
+const rpcUrls = (process.env[`PONDER_RPC_URL_${chainId}`] ?? "")
+  .split(",")
+  .map((u) => u.trim())
+  .filter(Boolean);
+if (rpcUrls.length === 0) throw new Error(`PONDER_RPC_URL_${chainId} is not set`);
+const pollingInterval = Number(process.env.POLLING_INTERVAL_MS ?? "2000");
 
 // WP11: deployments made before the AMM existed have no AmmFactory; the zero address never emits,
 // so the AMM handlers simply stay idle until the next deploy writes the address.
@@ -42,7 +51,8 @@ export default createConfig({
   chains: {
     [chainName]: {
       id: chainId,
-      rpc: http(process.env[`PONDER_RPC_URL_${chainId}`]),
+      rpc: rpcUrls.length === 1 ? http(rpcUrls[0]) : rpcUrls,
+      pollingInterval,
     },
   },
   contracts: {

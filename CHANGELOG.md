@@ -5,6 +5,12 @@ the first testnet deploy.
 
 ## [Unreleased]
 
+### Indexer on keyless public RPCs (2026-10-21)
+- `PONDER_RPC_URL_<chainId>` may list several URLs separated by commas; Ponder spreads realtime requests over them
+  and skips a failing one. The mainnet indexer now runs on PublicNode, dRPC and 1RPC instead of a keyed provider
+  whose free monthly quota the one-second head polling exhausted in two days. The head is polled every 2 seconds
+  (`POLLING_INTERVAL_MS`), the Base block time, which halves the request count.
+
 ### Uniswap pool link (2026-10-20)
 - The token page and Transparency list the external Uniswap v3 TRCH/WETH pool (1 % fee) next to the official contract,
   with a note that the LaunchPool curve remains the primary market. The LaunchPool UI links the token page on the

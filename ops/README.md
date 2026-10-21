@@ -65,7 +65,8 @@ sudo systemctl restart ponder            # a schema change needs a new --schema 
 
 ## Switching the indexed chain (testnet -> mainnet)
 
-`indexer/.env.local`: `CHAIN_ID=8453`, `PONDER_RPC_URL_8453=https://mainnet.base.org`, `START_BLOCK=<deploy block>`;
+`indexer/.env.local`: `CHAIN_ID=8453`, `PONDER_RPC_URL_8453=https://base-rpc.publicnode.com,https://base.drpc.org,https://1rpc.io/base`
+(several keyless public endpoints separated by commas; Ponder spreads requests over them), `START_BLOCK=<deploy block>`;
 `ponder.service`: `--schema tl_8453`; `sudo systemctl daemon-reload && sudo systemctl restart ponder`. The testnet
 schema stays in the PGlite directory until `indexer/.ponder` is cleaned.
 
@@ -74,8 +75,9 @@ schema stays in the PGlite directory until `indexer/.ponder` is cleaned.
 - `systemctl status ponder ipfs nginx caddy`, `free -m`, `cat /proc/loadavg`: load above the core count or free
   memory near zero for minutes means the box is too small for the current Ponder working set.
 - `/var/log/indexer-healthcheck.log`: every forced restart is logged; more than a few per day is a capacity signal.
-- `sudo journalctl -u ponder | grep -i "failed"`: public RPC rate limits show up here first; a private free-tier RPC
-  URL in `.env.local` is the fix.
+- `sudo journalctl -u ponder | grep -i "failed"`: public RPC rate limits show up here first; add or swap endpoints in
+  the comma-separated `PONDER_RPC_URL_8453`. A keyed provider's free quota is not a fix: the realtime head polling
+  burned through one in two days (2026-10-21).
 - Disk: PGlite grows with the chain history (49 MB after a day of testnet); 30 GB lasts years.
 
 ## Releasing the site (mainnet, since 2026-10-19)
