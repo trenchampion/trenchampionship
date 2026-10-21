@@ -90,6 +90,11 @@ schema stays in the PGlite directory until `indexer/.ponder` is cleaned.
 3. Pin the new CID on the second node as well (`ipfs pin add <cid>`, then `ipfs pin rm <old>`). eth.limo refreshes its
    IPNS cache within about an hour.
 
+`ops/xpost.py` posts to the project's X account through the v2 API (OAuth 1.0a, stdlib only; credentials in
+`/home/admin/.x-api` on the server, never in the repo). `xpost.py me` checks the account, `xpost.py post FILE` posts a
+file (blocks separated by `=== ` lines become a thread, an `IMAGE: path` line attaches a picture), and a daily cron
+(`xpost.py queue`, 14:00 UTC) posts the first file of `/home/admin/x-queue` and moves it to `/home/admin/x-posted`.
+Only texts the founder has approved are placed in the queue.
 `ops/supply-api.sh` writes `/var/www/api/total-supply` and `/var/www/api/circulating-supply` (whole TRCH, bare numbers)
 from the chain; cron runs it every 5 minutes and Caddy serves them at `https://trenchampionship.com/api/<name>` for
 CoinGecko and CoinMarketCap (circulating = total minus the unsold curve supply minus the RewardPool seed).

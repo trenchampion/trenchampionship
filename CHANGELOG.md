@@ -5,6 +5,10 @@ the first testnet deploy.
 
 ## [Unreleased]
 
+### Posting to X from the server (2026-10-21)
+- `ops/xpost.py`: posts and threads (with images) to the project's X account through the v2 API with OAuth 1.0a,
+  plus a daily queue so approved texts go out one per day without anyone at the keyboard.
+
 ### Supply endpoints for price trackers (2026-10-21)
 - `https://trenchampionship.com/api/total-supply` and `/api/circulating-supply` return bare numbers in whole TRCH,
   refreshed from the chain every 5 minutes (`ops/supply-api.sh`). Circulating supply excludes the unsold tokens on the
