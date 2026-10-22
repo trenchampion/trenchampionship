@@ -5,6 +5,10 @@ the first testnet deploy.
 
 ## [Unreleased]
 
+### Terms of Service and Privacy notice (2026-10-22)
+- New pages /terms/ and /privacy/ (no operator, game for entertainment, nothing collected by the site, what the
+  chain and third parties see), linked from the footer next to the Disclaimer. App directories ask for both.
+
 ### Posting to X from the server (2026-10-21)
 - `ops/xpost.py`: posts and threads (with images) to the project's X account through the v2 API with OAuth 1.0a,
   plus a daily queue so approved texts go out one per day without anyone at the keyboard.

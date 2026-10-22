@@ -86,6 +86,16 @@ export function Footer() {
               </Link>
             </li>
             <li>
+              <Link href="/terms/" className="hover:text-[var(--accent)]">
+                Terms of Service
+              </Link>
+            </li>
+            <li>
+              <Link href="/privacy/" className="hover:text-[var(--accent)]">
+                Privacy
+              </Link>
+            </li>
+            <li>
               <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 hover:text-[var(--accent)]">
                 GitHub repository <IconExternal />
               </a>
